@@ -7,16 +7,22 @@
         Also need to place the divs properly. Desired test configuration is side-by-side.  -->
 
 {% block content %}
-    <h1>Chungus</h1>
-    <a href="{{ url_for('home') }}">Home</a>
-    <p>give me displays!!</p>
+    <div class="row">
+        <h1>Chungus</h1>
+        <a href="{{ url_for('home') }}">Home</a>
+        <p>give me displays!!</p>
 
-    {% include "chungus_display_1.html" %}
+        <div class="col-sm-6">
+            {% include "chungus_display_1.html" %}
+        </div>
 
-    <br>
-    <br>
-    <div>
-        <h2>Display 2 (Left)</h2>
+        <div class="col-sm-6">
+            <div id="display-2" class="display-2">
+                {% include "chungus_display_2.html" %}
+            </div>
+        </div>
+        
     </div>
+    
 {% endblock content%}
 
