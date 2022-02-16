@@ -7,3 +7,4 @@ Directory structure:
  - `src`: code
  - `doc`: images/files for wiki doc
 
+[[Setup|Setup]].
