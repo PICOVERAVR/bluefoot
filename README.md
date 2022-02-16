@@ -6,5 +6,3 @@ Directory structure:
  - `case`: mechanical design files, models, etc
  - `src`: code
  - `doc`: images/files for wiki doc
-
-[[Setup|Setup]].
