@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+<!-- This file serves as the Chungus display -->
+
+<!-- As given, this file creates two divs. One takes spotify data passed from UI.py
+        to print out relevant song details. We need to figure out how to dynamically update displays.
+        Also need to place the divs properly. Desired test configuration is side-by-side.  -->
+
+{% block content %}
+    <h1>Chungus</h1>
+    <a href="{{ url_for('home') }}">Home</a>
+    <p>give me displays!!</p>
+
+    {% include "chungus_display_1.html" %}
+
+    <br>
+    <br>
+    <div>
+        <h2>Display 2 (Left)</h2>
+    </div>
+{% endblock content%}
+
