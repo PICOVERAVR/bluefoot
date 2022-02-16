@@ -1,3 +1,9 @@
+.icon {
+    background: #07160f81;
+    margin-right: 6px;
+    padding: 5px;
+}
+
 body {
     background: #fafafa;
     color: #333333;
@@ -9,11 +15,11 @@ body {
   }
   
   .bg-steel {
-    background-color: #5f788a;
+    background-color: #2597e9;
   }
   
   .site-header .navbar-nav .nav-link {
-    color: #cbd5db;
+    color: #ffffff;
   }
   
   .site-header .navbar-nav .nav-link:hover {
