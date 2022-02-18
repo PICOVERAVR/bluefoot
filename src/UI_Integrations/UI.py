@@ -55,7 +55,7 @@ def chungus():
 # Set global data (be careful... this is necessary for avoiding javascript,
 #   but global variables can be dangerous/messy)
 @app.context_processor
-def inject_load():
+def inject_data():
     dynamic_vars = {}
 
     # For Spotify, retrieve data and format it something like this:
