@@ -11,13 +11,17 @@
 
 # Disclaimer: A majority of this boilerplate was written alongside the YouTube tutorials by Corey Schafer
 
-from flask import Flask, render_template, url_for
+from flask import Flask, render_template, url_for, flash, request
 from turbo_flask import Turbo
 from datetime import datetime, timedelta
 from time import sleep
 import threading
 
 app = Flask(__name__)
+
+# WHEN DEPLOYING PUBLICLY, GENERATE A NEW ONE AND MAKE IT AN ENVIRONMENT VARIABLE OR SOMETHING INSTEAD,
+#   OTHERWISE THIS KEY IS USELESS FOR PREVENTING SECURITY RISKS
+app.config['SECRET_KEY'] = '1c54243c5e2a20c2fbcccee5f28ff349'
 turbo = Turbo(app)
 
 def test_url(self):
@@ -27,7 +31,7 @@ def test_url(self):
 test_data = [
     {
         'id': 0,
-        'content': 'data 0'
+        'content': 'N/A'
     },
     {
         'id': 1,
@@ -43,14 +47,25 @@ def home():
     return render_template("home.html")
 
 # smol page route
-@app.route("/smol")
+@app.route("/smol", methods=['POST', 'GET'])
 def smol():
-    return render_template("smol.html", test_data=test_data)
+    if 'On Button' in request.form:
+        print("smol: On button pressed")
+        test_data[0]['content'] = 'ON'
+    elif 'Off Button' in request.form:
+        print("smol: Off button pressed")
+        test_data[0]['content'] = 'OFF'
+    turbo.push(turbo.replace(render_template('smol_button_status.html'), 'button_status'))
+    return render_template("smol.html", title='smol')
+
+
 
 # Chungus page route
 @app.route("/chungus")
 def chungus():
-    return render_template("chungus.html")
+    return render_template("chungus.html", title='Chungus')
+
+
 
 # Set global data (be careful... this is necessary for avoiding javascript,
 #   but global variables can be dangerous/messy)
@@ -73,6 +88,7 @@ def inject_data():
     # Add dictionaries entries for dynamic data here
     dynamic_vars['chungus_current_time'] = datetime.now().strftime("%H:%M:%S")
     dynamic_vars['spotify_data'] = spotify_data
+    dynamic_vars['test_data'] = test_data
 
     return dynamic_vars
 
@@ -83,6 +99,8 @@ def update_chungus_d1():
         while True:
             sleep(1)
             turbo.push(turbo.replace(render_template('chungus_display_1.html'), 'display-1')) # look into the "to" argument for client-specific updates
+
+
 
 @app.before_first_request
 def before_first_request():
