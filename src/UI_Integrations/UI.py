@@ -35,24 +35,26 @@ test_data = [
     }
 ]
 
-
+# Home page route
 @app.route("/")
 @app.route("/home")
 @app.route("/index.html")
 def home():
     return render_template("home.html")
 
-
+# smol page route
 @app.route("/smol")
 def smol():
     return render_template("smol.html", test_data=test_data)
 
+# Chungus page route
 @app.route("/chungus")
 def chungus():
     
     return render_template("chungus.html")
 
-
+# Set global data (be careful... this is necessary for avoiding javascript,
+#   but global variables can be dangerous/messy)
 @app.context_processor
 def inject_load():
     dynamic_vars = {}
@@ -70,14 +72,15 @@ def inject_load():
         }
 ]
 
-    # Add dictionaries for dynamic data here
-
+    # Add dictionaries entries for dynamic data here
     dynamic_vars['chungus_current_time'] = datetime.now().strftime("%H:%M:%S")
     dynamic_vars['spotify_data'] = spotify_data
 
     return dynamic_vars
 
-def update_load():
+# Visually update chungus's display 1. Call from separate
+#   thread in before_first_request(), as this runs in an infinite loop.
+def update_chungus_d1():
     with app.app_context():
         while True:
             sleep(1)
@@ -85,7 +88,7 @@ def update_load():
 
 @app.before_first_request
 def before_first_request():
-    threading.Thread(target=update_load).start()
+    threading.Thread(target=update_chungus_d1).start()
 
 
 
