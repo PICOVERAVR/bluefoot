@@ -49,13 +49,16 @@ def home():
 # smol page route
 @app.route("/smol", methods=['POST', 'GET'])
 def smol():
-    if 'On Button' in request.form:
-        print("smol: On button pressed")
-        test_data[0]['content'] = 'ON'
-    elif 'Off Button' in request.form:
-        print("smol: Off button pressed")
-        test_data[0]['content'] = 'OFF'
-    turbo.push(turbo.replace(render_template('smol_button_status.html'), 'button_status'))
+    if request.method == 'POST':
+        if request.form['On-Off Button'] == 'on':
+            print("smol: On button pressed")
+            test_data[0]['content'] = 'ON'
+            turbo.push(turbo.replace(render_template('smol_button_status.html'), 'button_status'))
+        elif request.form['On-Off Button'] == 'off':
+            print("smol: Off button pressed")
+            test_data[0]['content'] = 'OFF'
+            turbo.push(turbo.replace(render_template('smol_button_status.html'), 'button_status'))
+    
     return render_template("smol.html", title='smol')
 
 
