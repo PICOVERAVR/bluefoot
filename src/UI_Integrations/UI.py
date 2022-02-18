@@ -50,7 +50,6 @@ def smol():
 # Chungus page route
 @app.route("/chungus")
 def chungus():
-    
     return render_template("chungus.html")
 
 # Set global data (be careful... this is necessary for avoiding javascript,
@@ -68,7 +67,6 @@ def inject_load():
         'album': 'Whenever You Need Somebody',
         'time_elapsed': str(timedelta(seconds=72)), # Replace 72 with spotify_API_retrieve.song_length or whatever
         'length': str(timedelta(seconds=212)), # Replace 212 with however many seconds long the song is
-        # NOTE: You must move time_elapsed to the inject_load function below for dynamic updates
         }
 ]
 
