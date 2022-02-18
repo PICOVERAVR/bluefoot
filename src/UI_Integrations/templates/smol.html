@@ -8,10 +8,30 @@
     <a href="{{ url_for('home') }}">Back to Home</a>
     <p>Hello World!</p>
 
+    <div class="content-section">
+        <form method="POST" action="">
+            <fieldset class="form-group">
+                <legend class="form-group">
+                    <div class="form-group">
+                        <form action="" method="post">
+                            <input type="submit" name="On Button" value="on">
+                            <input type="submit" name="Off Button" value="off">
+                        </form>
+                    </div>
+                </legend>
+            </fieldset>
+        </form>
+    </div>
+
     {% for data in test_data %}
-        <h2> Data ID: {{ data.id }} </h2>
-        <p>Data Content: {{ data.content }}</p>
-        {{ data }}
+        {% if data.id == 0 %}
+            {% include "smol_button_status.html" %}
+        {% else %}
+            <h2> Data ID: {{ data.id }} </h2>
+            <p>Data Content: {{ data.content }}</p>
+            <p>{{ data }}</p>
+        {% endif %}
+        
     {% endfor %}
 
 {% endblock content %}
