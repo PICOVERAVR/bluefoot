@@ -93,7 +93,7 @@ class RotEnc:
     ENC_1 = 11 # GPIO pin 17
     ENC_2 = 12 # GPIO pin 18
 
-    DEBOUNCE_MS = 1 # short debounce because rotary encoder pulses are transient
+    DEBOUNCE_MS = 100
 
     def debounce(self, pin):
         v1 = GPIO.input(pin)
@@ -116,7 +116,6 @@ class RotEnc:
     def read(self):
         """
         Read the rotary encoder. Blocks until the knob is turned.
-        TODO: timeout?
         """
         prev_1 = self.debounce(self.ENC_1)
         prev_2 = self.debounce(self.ENC_2)
@@ -133,23 +132,26 @@ class RotEnc:
                 prev_1 = curr_1
                 prev_2 = curr_2
 
-    # TODO: callback code for this
-
     def setup_callback(self, fn):
         """
         Sets up a callback to be run when the knob is turned.
         The callback should be declared in the following way:
-        def fn(dir: Boolean):
+        def fn(dir: RotState):
             
         """
+        self.call_fn = fn
 
-        def check_dir(self, channel):
+        def check_dir(channel):
             """
             Check which direction the rotary encoder is turning.
             """
+            if channel == self.ENC_1 and GPIO.input(self.ENC_2) == GPIO.HIGH:
+                self.call_fn(RotState.CCW)
+            elif GPIO.input(self.ENC_1) == GPIO.HIGH:
+                self.call_fn(RotState.CW)
 
-        GPIO.add_event_detect(self.ENC_1, GPIO.RISING, callback=check_dir, bouncetime=self.DEBOUNCE_MS)
-        GPIO.add_event_detect(self.ENC_2, GPIO.RISING, callback=check_dir, bouncetime=self.DEBOUNCE_MS)
+        GPIO.add_event_detect(self.ENC_1, GPIO.FALLING, callback=check_dir, bouncetime=self.DEBOUNCE_MS)
+        GPIO.add_event_detect(self.ENC_2, GPIO.FALLING, callback=check_dir, bouncetime=self.DEBOUNCE_MS)
 
 def test():
     """
@@ -166,23 +168,21 @@ def test():
 
     time.sleep(0.2)
 
-    print('reading buttons')
+    def show_val(channel):
+        print(f'press on channel {channel}')
 
     b = Button()
+    b.setup_callback(show_val)
     
-    #def show_val(channel):
-    #    print(f'press on channel {channel}')
-
-    #b.setup_callback(show_val)
-    #while True:
-    #    pass
-
-    vals = b.read()
-    print(f'Buttons state (BRGY): {vals}')
+    def show_enc(dir: RotState):
+        print(f'turn, direction: {dir}')
 
     enc = RotEnc()
-    print(f'Encoder state:')
-    print(f'{enc.read()}')
+    enc.setup_callback(show_enc)
+    
+    print('turn the rotary encoder or press buttons, they should show up here')
+    while True:
+        pass
 
 if __name__ == "__main__":
     test()
