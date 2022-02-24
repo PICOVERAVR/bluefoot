@@ -39,6 +39,8 @@ test_data = [
     }
 ]
 
+preset = {'id': 1}
+
 # Home page route
 @app.route("/")
 @app.route("/home")
@@ -64,8 +66,17 @@ def smol():
 
 
 # Chungus page route
-@app.route("/chungus")
+@app.route("/chungus", methods=['POST', 'GET'])
 def chungus():
+    if request.method == 'POST':
+        if request.form['display-preset'] == '1':
+            preset['id'] = 1
+            print("Preset 1")
+            turbo.push(turbo.replace(render_template('preset_conditionals.html'), 'display-presets'))
+        elif request.form['display-preset'] == '2':
+            preset['id'] = 2
+            print("Preset 2")
+            turbo.push(turbo.replace(render_template('preset_conditionals.html'), 'display-presets'))
     return render_template("chungus.html", title='Chungus')
 
 @app.route("/login")
@@ -94,6 +105,7 @@ def inject_data():
     dynamic_vars['chungus_current_time'] = datetime.now().strftime("%H:%M:%S")
     dynamic_vars['spotify_data'] = spotify_data
     dynamic_vars['test_data'] = test_data
+    dynamic_vars['preset'] = preset
 
     return dynamic_vars
 
