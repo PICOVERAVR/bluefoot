@@ -94,25 +94,42 @@ class BrightnessSensor:
     FLAG_CONV_R = 0x20
     FLAG_CONV_B = 0x30
 
+    # Initializes brightness sensor to default configurations:
+    # RGB detection and 10k sampling rate, maximum infrared filtering, no interrupts
     def __init__(self):
         self.bus = smbus.SMBus(self.DEVICE_BUS)                                                          # bus used to read / write
         self.bus.write_byte_data(self.DEVICE_ADDR, self.CONFIG_1, self.CFG1_MODE_RGB | self.CFG1_10KLUX) # configure mode & rate
         self.bus.write_byte_data(self.DEVICE_ADDR, self.CONFIG_2, self.CFG2_IR_ADJUST_HIGH)              # configure infrared filtering
         self.bus.write_byte_data(self.DEVICE_ADDR, self.CONFIG_3, self.CFG_DEFAULT)                      # we don't need interrupts
 
+    # Returns value of blue register
     def read_blue(self) -> (int):
-        return (self.bus.read_word_data(self.DEVICE_ADDR, self.BLUE_L))                                  # read blue value
+        return (self.bus.read_word_data(self.DEVICE_ADDR, self.BLUE_L))
 
+    # Returns value of red register
     def read_red(self) -> (int):
-        return (self.bus.read_word_data(self.DEVICE_ADDR, self.RED_L))                                   # read red value
+        return (self.bus.read_word_data(self.DEVICE_ADDR, self.RED_L))
     
+    # Returns value of green register
     def read_green(self) -> (int):
-        return (self.bus.read_word_data(self.DEVICE_ADDR, self.GREEN_L))                                 # read green value
+        return (self.bus.read_word_data(self.DEVICE_ADDR, self.GREEN_L))
     
     def test():
         sensor = BrightnessSensor()
-        print(sensor.read_blue())
-        print(sensor.read_red())
-        print(sensor.read_green())
+        cont = "y"
+        while (cont == "y"):
+            print(sensor.read_blue())
+            print(sensor.read_red())
+            print(sensor.read_green())
+            with open("/sys/class/backlight/10-0045/brightness", "r") as f:
+                print("current value = " + f.read())
+            with open("/sys/class/backlight/10-0045/brightness", "w") as f:
+                print("enter next value")
+                n = input()
+                f.write(n)
+            print("continue? y/n")
+            cont = input()
+        with open("/sys/class/backlight/10-0045/brightness", "w") as f:
+            f.write("128")                                                  # reset brightness before exiting
     
-# BrightnessSensor.test()
+BrightnessSensor.test()
