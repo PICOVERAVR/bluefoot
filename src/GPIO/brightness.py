@@ -113,6 +113,18 @@ class BrightnessSensor:
     # Returns value of green register
     def read_green(self) -> (int):
         return (self.bus.read_word_data(self.DEVICE_ADDR, self.GREEN_L))
+
+    # Returns current brightness value
+    def get_brightness(self):
+        with open("/sys/class/backlight/10-0045/brightness", "r") as f:
+            return f.read()
+    
+    # Writes new brightness value
+    # new_brightness should be between 0 and 255
+    # new_brightness can be a string or an int
+    def write_brightness(self, new_brightness):
+        with open("/sys/class/backlight/10-0045/brightness", "w") as f:
+            f.write(str(new_brightness))
     
     def test():
         sensor = BrightnessSensor()
@@ -121,15 +133,12 @@ class BrightnessSensor:
             print(sensor.read_blue())
             print(sensor.read_red())
             print(sensor.read_green())
-            with open("/sys/class/backlight/10-0045/brightness", "r") as f:
-                print("current value = " + f.read())
-            with open("/sys/class/backlight/10-0045/brightness", "w") as f:
-                print("enter next value")
-                n = input()
-                f.write(n)
+            print(sensor.get_brightness())
+            print("enter next value")
+            new_brightness = input()
+            sensor.write_brightness(new_brightness)
             print("continue? y/n")
             cont = input()
-        with open("/sys/class/backlight/10-0045/brightness", "w") as f:
-            f.write("128")                                                  # reset brightness before exiting
+        sensor.write_brightness(128)                    # reset brightness before exiting
     
 BrightnessSensor.test()
