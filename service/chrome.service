@@ -1,0 +1,17 @@
+[Unit]
+Description=Launches chrome and navigates to 127.0.0.1:5000
+Documentation=https://github.com/PICOVERAVR/bluefoot/wiki
+
+# requires GUI, network, and the flask server to all be online
+Requires=graphical.target
+Requires=network-online.target
+Requires=bluefoot.service
+After=graphical.target
+After=network-online.target
+After=bluefoot.service
+
+[Service]
+Type=forking
+# start chrome and navigate to home page
+ExecStart=chromium-browser 127.0.0.1:5000
+
