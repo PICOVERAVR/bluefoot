@@ -67,7 +67,7 @@ def smol():
 @app.route("/chungus")
 def chungus():
     return render_template("chungus.html", title='Chungus')
-
+#login page route
 @app.route("/login")
 def Login():
     return render_template("login.html", title='Chungus')
