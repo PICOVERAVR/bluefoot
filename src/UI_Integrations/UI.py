@@ -12,6 +12,7 @@
 # Disclaimer: A majority of this boilerplate was written alongside the YouTube tutorials by Corey Schafer
 
 from flask import Flask, render_template, url_for, flash, request
+from forms import registerform,Loginform
 from turbo_flask import Turbo
 from datetime import datetime, timedelta
 from time import sleep
@@ -70,7 +71,13 @@ def chungus():
 #login page route
 @app.route("/login")
 def Login():
-    return render_template("login.html", title='Chungus')
+    form = Loginform
+    return render_template("login.html", title='login',form = form)
+
+@app.route("/register")
+def Register():
+    form = registerform
+    return render_template("login.html", title='Register',form = form)
 
 # Set global data (be careful... this is necessary for avoiding javascript,
 #   but global variables can be dangerous/messy)
