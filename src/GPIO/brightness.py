@@ -4,6 +4,7 @@
 #!/usr/bin/env python3
 
 import smbus
+import time
 
 class BrightnessSensor:
 
@@ -140,5 +141,13 @@ class BrightnessSensor:
             print("continue? y/n")
             cont = input()
         sensor.write_brightness(128)                    # reset brightness before exiting
+
+    def test_values():
+        sensor = BrightnessSensor()
+        for i in range(20):
+            print(str(i) + " blue: " + str(sensor.read_blue()) + " red: " + str(sensor.read_red()) + " green: " + str(sensor.read_green()))
+            time.sleep(0.2)
+            
     
-BrightnessSensor.test()
+#BrightnessSensor.test()
+BrightnessSensor.test_values()
