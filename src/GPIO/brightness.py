@@ -95,6 +95,11 @@ class BrightnessSensor:
     FLAG_CONV_R = 0x20
     FLAG_CONV_B = 0x30
 
+    # Brightness adjustment constants
+    STEP_SIZE = 135
+    MIN_BRIGHTNESS = 67
+    MAX_BRIGHTNESS = 255
+
     # Initializes brightness sensor to default configurations:
     # RGB detection and 10k sampling rate, maximum infrared filtering, no interrupts
     def __init__(self):
@@ -126,6 +131,21 @@ class BrightnessSensor:
     def write_brightness(self, new_brightness):
         with open("/sys/class/backlight/10-0045/brightness", "w") as f:
             f.write(str(new_brightness))
+
+    def auto_update(self):
+        # Get sum of all brightness values
+        sum = self.read_blue()
+        sum += self.read_red()
+        sum += self.read_green()
+        # Determine current chunk
+        chunk = (int) (sum / self.STEP_SIZE) + 1
+        # Determine new brightness value
+        new_brightness = self.MIN_BRIGHTNESS + (chunk << 1)
+        if (new_brightness > self.MAX_BRIGHTNESS):
+            new_brightness = self.MAX_BRIGHTNESS
+        # Write new brightness value
+        self.write_brightness(new_brightness)
+        print(new_brightness)
     
     def test():
         sensor = BrightnessSensor()
@@ -147,7 +167,16 @@ class BrightnessSensor:
         for i in range(20):
             print(str(i) + " blue: " + str(sensor.read_blue()) + " red: " + str(sensor.read_red()) + " green: " + str(sensor.read_green()))
             time.sleep(0.2)
+
+    def test_auto_update():
+        sensor = BrightnessSensor()
+        while (1):
+            sensor.auto_update()
+            time.sleep(1.0)
             
     
 #BrightnessSensor.test()
-BrightnessSensor.test_values()
+#BrightnessSensor.test_values()
+BrightnessSensor.test_auto_update()
+
+# sudo chmod a+w /sys/class/backlight/10-0045/brightness
