@@ -197,10 +197,17 @@ class BrightnessSensor:
         while (1):
             sensor.auto_update()
             time.sleep(1.0)
+
+    def test_auto_update_smooth():
+        sensor = BrightnessSensor()
+        while (1):
+            sensor.auto_update_smooth()
+            time.sleep(1.0)
             
     
 #BrightnessSensor.test()
 #BrightnessSensor.test_values()
-BrightnessSensor.test_auto_update()
+#BrightnessSensor.test_auto_update()
+BrightnessSensor.test_auto_update_smooth()
 
 # sudo chmod a+w /sys/class/backlight/10-0045/brightness
