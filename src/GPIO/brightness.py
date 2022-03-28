@@ -99,7 +99,7 @@ class BrightnessSensor:
     STEP_SIZE = 135
     MIN_BRIGHTNESS = 67
     MAX_BRIGHTNESS = 255
-    SMOOTH_STEP = 3
+    SMOOTH_STEP = 10
 
     # Initializes brightness sensor to default configurations:
     # RGB detection and 10k sampling rate, maximum infrared filtering, no interrupts
@@ -149,8 +149,10 @@ class BrightnessSensor:
             new_brightness = self.MAX_BRIGHTNESS
         # Write new brightness value
         self.write_brightness(new_brightness)
-        print(new_brightness)
     
+    # Sets brightness of screen based on current values detected by RGB sensor
+    # Value will be between MIN_BRIGHTNESS + 2 and MAX_BRIGHTNESS
+    # Updates incrementally
     def auto_update_smooth(self):
         # Get sum of all brightness values
         sum = self.read_blue()
@@ -159,17 +161,17 @@ class BrightnessSensor:
         # Determine current chunk
         chunk = (int) (sum / self.STEP_SIZE) + 1
         # Determine goal brightness value
-        goal_brightness = self.MIN_BRIGHTNESS + (chunk << 1)
+        goal_brightness = self.MIN_BRIGHTNESS + (chunk * 2)
         if (goal_brightness > self.MAX_BRIGHTNESS):
             goal_brightness = self.MAX_BRIGHTNESS
         # Increment or decrement actual brightness value as needed
-        cur = self.get_brightness()
+        cur = int(self.get_brightness())
         if (cur - goal_brightness > self.SMOOTH_STEP):
-            sensor.write_brightness(cur-self.SMOOTH_STEP)
+            self.write_brightness(cur-self.SMOOTH_STEP)
         elif (goal_brightness - cur > self.SMOOTH_STEP):
-            sensor.write_brightness(cur+self.SMOOTH_STEP)
+            self.write_brightness(cur+self.SMOOTH_STEP)
         else:
-            sensor.write_brightness(goal_brightness)
+            self.write_brightness(goal_brightness)
     
     def test():
         sensor = BrightnessSensor()
@@ -202,7 +204,7 @@ class BrightnessSensor:
         sensor = BrightnessSensor()
         while (1):
             sensor.auto_update_smooth()
-            time.sleep(1.0)
+            time.sleep(0.5)
             
     
 #BrightnessSensor.test()
