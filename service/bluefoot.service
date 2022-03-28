@@ -1,15 +1,17 @@
 [Unit]
 Description=A flask web server running bluefoot code
-Documentation=https://github.com/PICOVERAVR/bluefoot/wiki
+Documentation=https://github.com/wait-how/bluefoot/wiki
 
 # need the network to start the web server
-Requires=network-online.target
 After=network-online.target
 
 [Service]
 Type=forking
+Environment=FLASK_APP=/home/pi/release/bluefoot/src/UI_Integrations/UI.py
 # activate venv (assuming this is installed!)
 ExecStartPre=source /home/pi/release/blfpi_venv/activate
 # start the flask server
-ExecStart=FLASK_APP=/home/pi/release/bluefoot/src/UI_Integrations/UI.py flask run
+ExecStart=flask run
 
+[Install]
+RequiredBy=network-online.target
