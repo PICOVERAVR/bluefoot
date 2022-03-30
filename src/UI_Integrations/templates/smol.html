@@ -1,17 +1,13 @@
 {% extends "layout.html" %}
 
-<!-- This file serves as the smol control panel. -->
-
 {% block content %}
 
-    <h1>Control Panel (smol)</h1>
-    <a href="{{ url_for('home') }}">Back to Home</a>
-    <p>Hello World!</p>
+<div class="col-sm-3">
 
-    {% for data in test_data %}
-        <h2> Data ID: {{ data.id }} </h2>
-        <p>Data Content: {{ data.content }}</p>
-        {{ data }}
-    {% endfor %}
+	<div id="" class="display-2">
+	    {% include "smol-html.html" %}
+	</div>
+</div>
+        
 
 {% endblock content %}
