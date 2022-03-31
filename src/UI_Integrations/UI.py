@@ -71,13 +71,13 @@ def chungus():
 #login page route
 @app.route("/login")
 def Login():
-    form = Loginform
+    form = Loginform()
     return render_template("login.html", title='login',form = form)
 
 @app.route("/register")
 def Register():
-    form = registerform
-    return render_template("login.html", title='Register',form = form)
+    form = registerform()
+    return render_template("register.html", title='Register',form = form)
 
 # Set global data (be careful... this is necessary for avoiding javascript,
 #   but global variables can be dangerous/messy)
