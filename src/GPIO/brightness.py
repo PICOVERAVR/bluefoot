@@ -154,24 +154,26 @@ class BrightnessSensor:
     # Value will be between MIN_BRIGHTNESS + 2 and MAX_BRIGHTNESS
     # Updates incrementally
     def auto_update_smooth(self):
-        # Get sum of all brightness values
-        sum = self.read_blue()
-        sum += self.read_red()
-        sum += self.read_green()
-        # Determine current chunk
-        chunk = (int) (sum / self.STEP_SIZE) + 1
-        # Determine goal brightness value
-        goal_brightness = self.MIN_BRIGHTNESS + (chunk * 2)
-        if (goal_brightness > self.MAX_BRIGHTNESS):
-            goal_brightness = self.MAX_BRIGHTNESS
-        # Increment or decrement actual brightness value as needed
-        cur = int(self.get_brightness())
-        if (cur - goal_brightness > self.SMOOTH_STEP):
-            self.write_brightness(cur-self.SMOOTH_STEP)
-        elif (goal_brightness - cur > self.SMOOTH_STEP):
-            self.write_brightness(cur+self.SMOOTH_STEP)
-        else:
-            self.write_brightness(goal_brightness)
+        while (1):
+            # Get sum of all brightness values
+            sum = self.read_blue()
+            sum += self.read_red()
+            sum += self.read_green()
+            # Determine current chunk
+            chunk = (int) (sum / self.STEP_SIZE) + 1
+            # Determine goal brightness value
+            goal_brightness = self.MIN_BRIGHTNESS + (chunk * 2)
+            if (goal_brightness > self.MAX_BRIGHTNESS):
+                goal_brightness = self.MAX_BRIGHTNESS
+            # Increment or decrement actual brightness value as needed
+            cur = int(self.get_brightness())
+            if (cur - goal_brightness > self.SMOOTH_STEP):
+                self.write_brightness(cur-self.SMOOTH_STEP)
+            elif (goal_brightness - cur > self.SMOOTH_STEP):
+                self.write_brightness(cur+self.SMOOTH_STEP)
+            else:
+                self.write_brightness(goal_brightness)
+            time.sleep(0.5)
     
     def test():
         sensor = BrightnessSensor()
@@ -200,16 +202,14 @@ class BrightnessSensor:
             sensor.auto_update()
             time.sleep(1.0)
 
-    def test_auto_update_smooth():
+    def final_auto_update_smooth():
         sensor = BrightnessSensor()
-        while (1):
-            sensor.auto_update_smooth()
-            time.sleep(0.5)
+        sensor.auto_update_smooth()
             
     
 #BrightnessSensor.test()
 #BrightnessSensor.test_values()
 #BrightnessSensor.test_auto_update()
-BrightnessSensor.test_auto_update_smooth()
+BrightnessSensor.final_auto_update_smooth()
 
 # sudo chmod a+w /sys/class/backlight/10-0045/brightness
