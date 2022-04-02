@@ -1,10 +1,13 @@
 {% extends "layout.html" %}
 
+<!-- <script type="text/javascript" src="{{url_for('static', filename='chungus.js')}}"></script> -->
+
 <!-- This file serves as the Chungus display -->
 
 <!-- As given, this file creates two divs. One takes spotify data passed from UI.py
         to print out relevant song details. We need to figure out how to dynamically update displays.
         Also need to place the divs properly. Desired test configuration is side-by-side.  -->
+
 
 {% block content %}
     <div class="row">
@@ -20,6 +23,8 @@
                         <div class="form-group">
                                 <input type="submit" name="display-preset" value="1">
                                 <input type="submit" name="display-preset" value="2">
+                                <input type="button" value="Scroll Down" onclick="pdfScrollDown()"></input>
+                                <input type="button" value="Scroll Up" onclick="pdfScrollUp()"></input>
                         </div>
                     </legend>
                 </fieldset>
@@ -29,6 +34,7 @@
         {% include "preset_conditionals.html" %}
 
     </div>
+    
     
 {% endblock content%}
 

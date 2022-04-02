@@ -39,7 +39,9 @@ test_data = [
     }
 ]
 
-preset = {'id': 1}
+preset = {
+    'id': 1
+}
 
 # Home page route
 @app.route("/")
