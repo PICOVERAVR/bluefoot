@@ -86,10 +86,13 @@ def chungus():
                 turbo.push(turbo.replace(render_template('preset_conditionals.html'), 'display-presets'))
         
         # Handle scroll action request (SocketIO)
-    #     elif 'scroll-action' in request.form.keys():
-    #         print("Scroll Action POST received")
-    #         socketio.emit('pdf-scroll-event', request.form['scroll-action'], broadcast=True)
-    # print("Re-rendering")
+        elif 'scroll-action' in request.form.keys():
+            tokens = request.form['scroll-action'].split()
+            tokens[-1] = "div-frame-" + tokens[-1]
+            print("Scroll Action POST received: " + str(tokens))
+            
+            socketio.emit('pdf-scroll-event', tokens, broadcast=True)
+
     return render_template("chungus.html", title='Chungus')
 
 @app.route("/login")

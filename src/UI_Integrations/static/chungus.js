@@ -12,29 +12,24 @@ window.onload = function() {
     // Listen for message from Flask App
     socket.on('pdf-scroll-event', function(msg) {
         console.log(msg);
+        if (msg[0] === 'Down') {
+            pdfScroll(msg[1], 0)
+        }
+        else if (msg[0] === 'Up') {
+            pdfScroll(msg[1], 1)
+        }
     });
 }
 
-function pdfScrollDown(div_frame_name) {
-    console.log("Entered scroll-down");
-    var iframeDiv = document.getElementById("div-frame-0");
+function pdfScroll(div_frame_name, dir) {
+    console.log("Entered scroll");
+    var iframeDiv = document.getElementById(div_frame_name);
     if (iframeDiv == null) return;
-    // console.log(pdf0Scroll);
-    pdf0Scroll += 30;
-    document.getElementById(div_frame_name).scrollTo({
-        top: pdf0Scroll,
-        behavior: 'smooth'
-    });
-}
-
-function pdfScrollUp(currentScroll) {
-    console.log("Entered scroll-down");
-    var iframeDiv = document.getElementById("div-frame-0");
-    if (iframeDiv == null) return;
-    // console.log(pdf0Scroll);
-    pdf0Scroll -= 30;
+    console.log(pdf0Scroll);
+    
+    (dir ? pdf0Scroll -= 30 : pdf0Scroll += 30);
     if (pdf0Scroll < 0) pdf0Scroll = 0;
-    document.getElementById('div-frame-0').scrollTo({
+    iframeDiv.scrollTo({
         top: pdf0Scroll,
         behavior: 'smooth'
     });
