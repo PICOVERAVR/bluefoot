@@ -15,6 +15,7 @@ from flask import Flask, render_template, url_for, flash, request
 from turbo_flask import Turbo
 from datetime import datetime, timedelta
 from time import sleep
+from flask_socketio import SocketIO, send, emit
 import threading
 
 app = Flask(__name__)
@@ -23,6 +24,7 @@ app = Flask(__name__)
 #   OTHERWISE THIS KEY IS USELESS FOR PREVENTING SECURITY RISKS
 app.config['SECRET_KEY'] = '1c54243c5e2a20c2fbcccee5f28ff349'
 turbo = Turbo(app)
+socketio = SocketIO(app)
 
 def test_url(self):
     with app.app_context(), app.test_request_context():
@@ -71,14 +73,23 @@ def smol():
 @app.route("/chungus", methods=['POST', 'GET'])
 def chungus():
     if request.method == 'POST':
-        if request.form['display-preset'] == '1':
-            preset['id'] = 1
-            print("Preset 1")
-            turbo.push(turbo.replace(render_template('preset_conditionals.html'), 'display-presets'))
-        elif request.form['display-preset'] == '2':
-            preset['id'] = 2
-            print("Preset 2")
-            turbo.push(turbo.replace(render_template('preset_conditionals.html'), 'display-presets'))
+        # Handle display preset request (turbo-flask)
+        if 'display-preset' in request.form.keys():
+            print("Display-Preset Action POST received")
+            if request.form['display-preset'] == '1':
+                preset['id'] = 1
+                print("Preset 1")
+                turbo.push(turbo.replace(render_template('preset_conditionals.html'), 'display-presets'))
+            elif request.form['display-preset'] == '2':
+                preset['id'] = 2
+                print("Preset 2")
+                turbo.push(turbo.replace(render_template('preset_conditionals.html'), 'display-presets'))
+        
+        # Handle scroll action request (SocketIO)
+    #     elif 'scroll-action' in request.form.keys():
+    #         print("Scroll Action POST received")
+    #         socketio.emit('pdf-scroll-event', request.form['scroll-action'], broadcast=True)
+    # print("Re-rendering")
     return render_template("chungus.html", title='Chungus')
 
 @app.route("/login")
@@ -125,7 +136,14 @@ def update_chungus_d1():
 def before_first_request():
     threading.Thread(target=update_chungus_d1).start()
 
+####################### SocketIO handlers ###############################
+
+@socketio.on('message')
+def handleMsg(msg):
+    print('Msg: ' + msg)
+    send(msg, broadcast=True) # broadcast off to respond to sender only instead
 
 
-# if __name__ == '__main__':
-#     app.run(debug=True)
+if __name__ == '__main__':
+    app.run(debug=True)
+    socketio.run(app)
