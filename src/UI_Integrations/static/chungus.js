@@ -11,7 +11,7 @@ window.onload = function() {
 
     // Listen for message from Flask App
     socket.on('pdf-scroll-event', function(msg) {
-        console.log(msg);
+        // console.log(msg);
         if (msg[0] === 'Down') {
             pdfScroll(msg[1], 0)
         }
@@ -22,10 +22,10 @@ window.onload = function() {
 }
 
 function pdfScroll(div_frame_name, dir) {
-    console.log("Entered scroll");
+    // console.log("Entered scroll");
     var iframeDiv = document.getElementById(div_frame_name);
     if (iframeDiv == null) return;
-    console.log(pdf0Scroll);
+    // console.log(pdf0Scroll);
     
     (dir ? pdf0Scroll -= 30 : pdf0Scroll += 30);
     if (pdf0Scroll < 0) pdf0Scroll = 0;
