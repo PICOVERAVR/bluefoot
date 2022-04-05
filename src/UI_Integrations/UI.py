@@ -42,7 +42,8 @@ test_data = [
 ]
 
 preset = {
-    'id': 1
+    'id': 1,
+    'iframes': ['frame-0']
 }
 
 # Home page route
@@ -88,7 +89,7 @@ def chungus():
         # Handle scroll action request (SocketIO)
         elif 'scroll-action' in request.form.keys():
             tokens = request.form['scroll-action'].split()
-            tokens[-1] = "div-frame-" + tokens[-1]
+            tokens[-1] = "frame-" + tokens[-1]
             print("Scroll Action POST received: " + str(tokens))
             
             socketio.emit('pdf-scroll-event', tokens, broadcast=True)
@@ -142,9 +143,14 @@ def before_first_request():
 ####################### SocketIO handlers ###############################
 
 @socketio.on('message')
-def handleMsg(msg):
+def handle_msg(msg):
     print('Msg: ' + msg)
     send(msg, broadcast=True) # broadcast off to respond to sender only instead
+
+@socketio.on('chungus-ready')
+def handle_chungus(msg):
+    print('Message: ' + msg)
+    socketio.emit('chungus-init', preset['iframes'], broadcast=True)
 
 
 if __name__ == '__main__':
