@@ -1,35 +1,16 @@
 
 window.onload = function() {
-    console.log("Page Loaded");
-    pdf0Scroll = 0;
+    var webpage = window.location.href;
+    if (webpage.indexOf('chungus') != -1) {
+        chungusInit();
+    }
+}
 
-    // var loadingTask = pdfjsLib.getDocument('http://www.africau.edu/images/default/sample.pdf');
-    // loadingTask.promise.then(function(pdf) {
-    //     console.log(pdf.view);
-    // });
-
+function chungusInit() {
+    console.log("Page Loaded: Chungus");
     var socket = io.connect('http://127.0.0.1:5000');
     socket.on('connect', function() {
         socket.emit("chungus-ready", 'Chungus: User has connected.');
-    });
-
-    // Listen for chungus init from Flask App
-        // initializes iframe size(s)
-    socket.on('chungus-init', function(iframes) {
-        var iframe;
-        var iframeDiv;
-        iframes.forEach(element => {
-            iframe = document.getElementById(element);
-            // iframeDiv = document.getElementById('div-' + element);
-            // console.log(iframe.scrolling);
-            // console.log('fscroll ' + iframe.scrollHeight);
-            // console.log('fclient ' + iframe.clientHeight);
-            // console.log('dscroll ' + iframeDiv.scrollHeight);
-            // console.log('dclient ' + iframeDiv.clientHeight);
-            // console.log('ftop ' + iframe.scrollTop);
-            // console.log('dtop ' + iframeDiv.scrollTop);
-            // iframe.style.height = (iframe.scrollHeight * 2) + 'px';
-        });
     });
 
     // Listen for pdf scroll from Flask App
@@ -48,7 +29,6 @@ function pdfScroll(frame_name, dir) {
     var iframe = document.getElementById(frame_name);
     var iframeDiv = document.getElementById('div-' + frame_name);
     if (iframeDiv == null || iframe == null) return;
-    // console.log(pdf0Scroll);
     
     var scrollTarget = iframeDiv.scrollTop;
     (dir ? scrollTarget -= 30 : scrollTarget += 30);
