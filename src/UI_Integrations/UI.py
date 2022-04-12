@@ -81,7 +81,7 @@ def chungus():
 
 @app.route("/login")
 def login():
-    return render_template("login.html", title='Chungus')
+    return render_template("login_ming.html", title='Chungus')
 
 # Set global data (be careful... this is necessary for avoiding javascript,
 #   but global variables can be dangerous/messy)
