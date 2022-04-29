@@ -11,12 +11,14 @@
 
 # Disclaimer: A majority of this boilerplate was written alongside the YouTube tutorials by Corey Schafer
 
-from flask import Flask, render_template, url_for, flash, request
+from flask import Flask, render_template, url_for, flash, request,redirect
 from forms import registerform,Loginform
 from turbo_flask import Turbo
 from datetime import datetime, timedelta
 from time import sleep
 import threading
+from Oauth import Oauth
+import newthing
 
 app = Flask(__name__)
 
@@ -69,15 +71,38 @@ def smol():
 def chungus():
     return render_template("chungus.html", title='Chungus')
 #login page route
-@app.route("/login")
+@app.route("/login",methods = ['GET','POST'])
 def Login():
     form = Loginform()
+    if form.validate_on_submit():
+        if form.username.data == "admin" and form.password.data == "admin":
+            flash('you have been logged in!','success')
+            return redirect(url_for('home'))
+        else:
+            flash('login unsuccessful. please check username and password','danger')
+
     return render_template("login.html", title='login',form = form)
 
-@app.route("/register")
+@app.route("/register",methods = ['GET','POST'])
 def Register():
     form = registerform()
-    return render_template("register.html", title='Register',form = form)
+    if form.validate_on_submit():
+        flash(f'Account has been created for {form.username.data}!','successful')
+        return redirect(redirect(url_for('home')))
+    #return render_template("register.html", title='Register',form = form)
+    return redirect(Oauth.discordloginurl)
+
+@app.route("/discord",methods = ['GET','POST'])
+def discord():
+    code = request.args.get("code")
+    #access_token = Oauth.get_discord_token(code)
+    access_token  = newthing.Oauth.get_discord_token(code)
+    #print("the access token was ",access_token)
+    newuser = newthing.Oauth.get_current_user(access_token['access_token'])
+    user = newuser.get("username")
+   # print("the user token was ",user)
+    newthing.Oauth.get_message(928457965890056242)
+    return access_token
 
 # Set global data (be careful... this is necessary for avoiding javascript,
 #   but global variables can be dangerous/messy)
