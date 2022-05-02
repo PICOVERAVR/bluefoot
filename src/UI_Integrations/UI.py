@@ -100,7 +100,7 @@ def discord():
     #print("the access token was ",access_token)
     newuser = newthing.Oauth.get_current_user(access_token['access_token'])
     user = newuser.get("username")
-   # print("the user token was ",user)
+    print("the user token was ",user)
     newthing.Oauth.get_message(928457965890056242)
     return access_token
 
